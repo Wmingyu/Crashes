@@ -1,0 +1,55 @@
+[ 1907.562036] ------------[ cut here ]------------
+[ 1907.563855] WARNING: CPU: 1 PID: 301 at lib/idr.c:84 idr_alloc+0x123/0x140
+[ 1907.566607] Modules linked in: bochs drm_shmem_helper drm_kms_helper drm virtio_pci i2c_piix4 ata_generic virtio_pci_legacy_dev i2c_smbus intel_qep drm_panel_orientation_quirks virtio_pci_modern_dev pata_acpi
+[ 1907.571667] CPU: 1 UID: 0 PID: 301 Comm: repro Not tainted 6.18.0 #9 PREEMPT(voluntary) 
+[ 1907.575671] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[ 1907.579444] RIP: 0010:idr_alloc+0x123/0x140
+[ 1907.581658] Code: 8b 44 24 58 65 48 2b 05 83 50 c2 03 75 27 48 83 c4 60 44 89 e0 5b 5d 41 5c 41 5d 41 5e 41 5f e9 c3 a9 0b 00 e8 be 6a ba fb 90 <0f> 0b 90 41 bc ea ff ff ff eb b2 e8 4d 0f 09 00 66 66 2e 0f 1f 84
+[ 1907.587827] RSP: 0018:ffff888015127b60 EFLAGS: 00010293
+[ 1907.589915] RAX: 0000000000000000 RBX: 0000000080000001 RCX: ffffffff85bbbefe
+[ 1907.593377] RDX: ffff888014c33500 RSI: ffffffff85bbbfa2 RDI: 0000000000000005
+[ 1907.596224] RBP: 1ffff11002a24f6c R08: 0000000000002800 R09: ffffed1002a24f71
+[ 1907.598957] R10: 0000000080000000 R11: ffff888015127972 R12: 0000000080000000
+[ 1907.601288] R13: ffff88800ce34088 R14: ffff88800bb1a800 R15: 0000000000002800
+[ 1907.604101] FS:  00007efde4c28740(0000) GS:ffff8880e333f000(0000) knlGS:0000000000000000
+[ 1907.607119] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1907.609274] CR2: 00007efde4dc4181 CR3: 0000000019484000 CR4: 00000000000006f0
+[ 1907.611616] Call Trace:
+[ 1907.612296]  <TASK>
+[ 1907.613194]  ? __pfx_idr_alloc+0x10/0x10
+[ 1907.615287]  ? __pfx_do_raw_spin_lock+0x10/0x10
+[ 1907.616982]  ? _raw_spin_unlock+0x23/0x40
+[ 1907.618510]  drm_gem_change_handle_ioctl+0x2bf/0x4f0 [drm]
+[ 1907.620724]  ? __pfx_drm_gem_change_handle_ioctl+0x10/0x10 [drm]
+[ 1907.623297]  ? find_held_lock+0x2b/0x80
+[ 1907.624721]  ? drm_dev_exit+0x48/0x70 [drm]
+[ 1907.626918]  ? lock_release+0xd3/0x2a0
+[ 1907.628638]  drm_ioctl_kernel+0x1f2/0x3e0 [drm]
+[ 1907.630780]  ? __pfx_drm_gem_change_handle_ioctl+0x10/0x10 [drm]
+[ 1907.633548]  ? __pfx_drm_ioctl_kernel+0x10/0x10 [drm]
+[ 1907.635531]  drm_ioctl+0x580/0xb70 [drm]
+[ 1907.637939]  ? __pfx_drm_gem_change_handle_ioctl+0x10/0x10 [drm]
+[ 1907.640390]  ? __pfx_drm_ioctl+0x10/0x10 [drm]
+[ 1907.642425]  ? find_held_lock+0x2b/0x80
+[ 1907.643992]  ? ksys_write+0x1a8/0x240
+[ 1907.645645]  ? __pfx_ksys_write+0x10/0x10
+[ 1907.647383]  ? __pfx_drm_ioctl+0x10/0x10 [drm]
+[ 1907.649467]  __x64_sys_ioctl+0x194/0x210
+[ 1907.650951]  do_syscall_64+0xc6/0x390
+[ 1907.652135]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[ 1907.653663] RIP: 0033:0x7efde4d1c2d7
+[ 1907.654636] Code: 00 00 00 48 8b 05 b9 cb 0d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 cb 0d 00 f7 d8 64 89 01 48
+[ 1907.659937] RSP: 002b:00007ffdca66d768 EFLAGS: 00000207 ORIG_RAX: 0000000000000010
+[ 1907.662720] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007efde4d1c2d7
+[ 1907.665480] RDX: 00007ffdca66d778 RSI: 00000000c00864d2 RDI: 0000000000000003
+[ 1907.668350] RBP: 00007ffdca66d7c0 R08: 0000000000000000 R09: 00007ffdca66d644
+[ 1907.671228] R10: 00007efde4e4c570 R11: 0000000000000207 R12: 00005625076160c0
+[ 1907.673996] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[ 1907.676751]  </TASK>
+[ 1907.677564] irq event stamp: 5915
+[ 1907.678756] hardirqs last  enabled at (5925): [<ffffffff8155bd39>] __up_console_sem+0x89/0xa0
+[ 1907.681676] hardirqs last disabled at (5934): [<ffffffff8155bd1e>] __up_console_sem+0x6e/0xa0
+[ 1907.684356] softirqs last  enabled at (5902): [<ffffffff813d2e09>] handle_softirqs+0x509/0x760
+[ 1907.686869] softirqs last disabled at (5897): [<ffffffff813d3140>] __irq_exit_rcu+0xd0/0x100
+[ 1907.689762] ---[ end trace 0000000000000000 ]---
+
