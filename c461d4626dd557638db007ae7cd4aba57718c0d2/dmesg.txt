@@ -1,0 +1,137 @@
+root@syzkaller:~# dmesg -c
+[  196.843772] cgroup: Unknown subsys name 'net'
+[  196.863959] cgroup: Unknown subsys name 'cpuset'
+[  196.872105] cgroup: Unknown subsys name 'rlimit'
+[  196.874171] cgroup: Unknown subsys name 'memory'
+[  196.898691] kmemleak: Automatic memory scanning thread ended
+[  197.537707] kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
+[  203.161775] Adding 124996k swap on ./swap-file.  Priority:0 extents:1 across:124996k 
+[  230.005400] c6xxvf 0000:00:04.0: Starting acceleration device qat_dev0.
+[  230.015865] ==================================================================
+[  230.018251] BUG: KASAN: slab-use-after-free in __mutex_lock+0xd0a/0x1160
+[  230.020642] Read of size 4 at addr ffff888012ea1ab4 by task syz.1.18/4237
+
+[  230.023669] CPU: 1 UID: 0 PID: 4237 Comm: syz.1.18 Tainted: G      D             6.18.0 #9 PREEMPT(voluntary) 
+[  230.023680] Tainted: [D]=DIE
+[  230.023682] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[  230.023688] Call Trace:
+[  230.023691]  <TASK>
+[  230.023694]  dump_stack_lvl+0xdb/0x140
+[  230.023745]  print_report+0xcb/0x610
+[  230.023754]  ? __virt_addr_valid+0x105/0x5e0
+[  230.023762]  ? __mutex_lock+0xd0a/0x1160
+[  230.023772]  ? __mutex_lock+0xd0a/0x1160
+[  230.023781]  kasan_report+0xca/0x100
+[  230.023789]  ? __mutex_lock+0xd0a/0x1160
+[  230.023800]  __mutex_lock+0xd0a/0x1160
+[  230.023813]  ? adf_dev_up+0x44/0x14c0 [intel_qat]
+[  230.023934]  ? __pfx___mutex_lock+0x10/0x10
+[  230.023944]  ? __dev_printk+0xfd/0x270
+[  230.023953]  ? _dev_info+0xe0/0x120
+[  230.023961]  ? __pfx__dev_info+0x10/0x10
+[  230.023968]  ? lock_release+0x1d7/0x2a0
+[  230.023979]  ? adf_dev_up+0x44/0x14c0 [intel_qat]
+[  230.024107]  adf_dev_up+0x44/0x14c0 [intel_qat]
+[  230.024228]  adf_ctl_ioctl+0x1d6/0x1080 [intel_qat]
+[  230.024345]  ? __pfx_adf_ctl_ioctl+0x10/0x10 [intel_qat]
+[  230.024461]  ? lock_release+0x1d7/0x2a0
+[  230.024471]  ? __fget_files+0x200/0x3b0
+[  230.024478]  ? __pfx_adf_ctl_ioctl+0x10/0x10 [intel_qat]
+[  230.024618]  __x64_sys_ioctl+0x194/0x210
+[  230.024628]  do_syscall_64+0xc6/0x390
+[  230.024639]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  230.024646] RIP: 0033:0x7f4ae220059d
+[  230.024653] Code: 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+[  230.024659] RSP: 002b:00007f4ae204ef98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[  230.024666] RAX: ffffffffffffffda RBX: 00007f4ae2475fa0 RCX: 00007f4ae220059d
+[  230.024671] RDX: 00002000000003c0 RSI: 0000000040096102 RDI: 0000000000000003
+[  230.024675] RBP: 00007f4ae229e078 R08: 0000000000000000 R09: 0000000000000000
+[  230.024679] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+[  230.024683] R13: 00007f4ae2476038 R14: 00007f4ae2475fa0 R15: 00007f4ae202f000
+[  230.024690]  </TASK>
+
+[  230.100748] Allocated by task 850:
+[  230.101989]  kasan_save_stack+0x24/0x50
+[  230.103520]  kasan_save_track+0x14/0x30
+[  230.104868]  __kasan_slab_alloc+0x59/0x70
+[  230.106238]  kmem_cache_alloc_node_noprof+0x21f/0x6f0
+[  230.107919]  copy_process+0x49c/0x72b0
+[  230.109398]  kernel_clone+0xef/0x800
+[  230.110710]  user_mode_thread+0xcd/0x110
+[  230.112049]  call_usermodehelper_exec_work+0x72/0x190
+[  230.113738]  process_one_work+0x8d1/0x19c0
+[  230.115085]  worker_thread+0x683/0xe90
+[  230.116464]  kthread+0x3cd/0x740
+[  230.117718]  ret_from_fork+0x3a1/0x490
+[  230.119143]  ret_from_fork_asm+0x1a/0x30
+
+[  230.121288] Freed by task 4176:
+[  230.122711]  kasan_save_stack+0x24/0x50
+[  230.123978]  kasan_save_track+0x14/0x30
+[  230.125525]  __kasan_save_free_info+0x3b/0x60
+[  230.127031]  __kasan_slab_free+0x43/0x70
+[  230.128576]  kmem_cache_free+0x2ad/0x620
+[  230.129886]  rcu_core+0x846/0x1940
+[  230.131061]  handle_softirqs+0x1bb/0x760
+[  230.132371]  __irq_exit_rcu+0xd0/0x100
+[  230.133622]  irq_exit_rcu+0xe/0x20
+[  230.134756]  sysvec_apic_timer_interrupt+0x70/0x80
+[  230.136394]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+
+[  230.138882] Last potentially related work creation:
+[  230.140770]  kasan_save_stack+0x24/0x50
+[  230.142139]  kasan_record_aux_stack+0x8c/0xa0
+[  230.143701]  __call_rcu_common.constprop.0+0x75/0x990
+[  230.145396]  delayed_put_task_struct+0xe3/0x260
+[  230.147164]  rcu_core+0x846/0x1940
+[  230.148648]  handle_softirqs+0x1bb/0x760
+[  230.150102]  __irq_exit_rcu+0xd0/0x100
+[  230.151479]  irq_exit_rcu+0xe/0x20
+[  230.152777]  sysvec_apic_timer_interrupt+0x70/0x80
+[  230.154308]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+
+[  230.156760] Second to last potentially related work creation:
+[  230.158504]  kasan_save_stack+0x24/0x50
+[  230.159825]  kasan_record_aux_stack+0x8c/0xa0
+[  230.161205]  __call_rcu_common.constprop.0+0x75/0x990
+[  230.162824]  put_task_struct_rcu_user+0x7a/0xc0
+[  230.164340]  release_task+0xfbf/0x1840
+[  230.165550]  wait_consider_task+0x18b9/0x3b50
+[  230.167012]  __do_wait+0x732/0x870
+[  230.168303]  do_wait+0x1d0/0x560
+[  230.169415]  kernel_wait+0xa4/0x160
+[  230.170940]  call_usermodehelper_exec_work+0xfe/0x190
+[  230.172921]  process_one_work+0x8d1/0x19c0
+[  230.174278]  worker_thread+0x683/0xe90
+[  230.175512]  kthread+0x3cd/0x740
+[  230.176620]  ret_from_fork+0x3a1/0x490
+[  230.177822]  ret_from_fork_asm+0x1a/0x30
+
+[  230.179816] The buggy address belongs to the object at ffff888012ea1a80
+                which belongs to the cache task_struct of size 6528
+[  230.184129] The buggy address is located 52 bytes inside of
+                freed 6528-byte region [ffff888012ea1a80, ffff888012ea3400)
+
+[  230.189913] The buggy address belongs to the physical page:
+[  230.192163] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x12ea0
+[  230.195145] head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[  230.197762] memcg:ffff88800f2b6741
+[  230.199152] anon flags: 0x100000000000040(head|node=0|zone=1)
+[  230.201384] page_type: f5(slab)
+[  230.202668] raw: 0100000000000040 ffff88800b642640 0000000000000000 dead000000000001
+[  230.205527] raw: 0000000000000000 0000000000040004 00000000f5000000 ffff88800f2b6741
+[  230.208145] head: 0100000000000040 ffff88800b642640 0000000000000000 dead000000000001
+[  230.211016] head: 0000000000000000 0000000000040004 00000000f5000000 ffff88800f2b6741
+[  230.213625] head: 0100000000000003 ffffea00004ba801 00000000ffffffff 00000000ffffffff
+[  230.216966] head: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000008
+[  230.219676] page dumped because: kasan: bad access detected
+
+[  230.222017] Memory state around the buggy address:
+[  230.223554]  ffff888012ea1980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  230.225876]  ffff888012ea1a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  230.228236] >ffff888012ea1a80: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  230.231557]                                      ^
+[  230.233181]  ffff888012ea1b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  230.235679]  ffff888012ea1b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  230.238571] ==================================================================
+
