@@ -1,0 +1,65 @@
+[   82.258438][T10335] ------------[ cut here ]------------
+[   82.260316][T10335] bochs-drm 0000:00:02.0: [drm] drm_WARN_ON(({ do { __attr)
+[   82.261031][T10335] WARNING: CPU: 1 PID: 10335 at drivers/gpu/drm/drm_gem.c:0
+[   82.294554][T10335] Modules linked in:
+[   82.296503][T10335] CPU: 1 UID: 0 PID: 10335 Comm: repro Not tainted 6.18.0  
+[   82.299458][T10335] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), B4
+[   82.303884][T10335] RIP: 0010:drm_gem_object_handle_put_unlocked+0x30e/0x3e0
+[   82.306560][T10335] Code: ed 74 61 e8 74 a8 84 fc 4c 89 e7 e8 2c 9e 94 00 48f
+[   82.312881][T10335] RSP: 0018:ffffc90003acf868 EFLAGS: 00010286
+[   82.314949][T10335] RAX: 0000000000000000 RBX: ffff88800b55bbe0 RCX: fffffff9
+[   82.317504][T10335] RDX: ffff888028229d00 RSI: ffffffff8179ed16 RDI: 00000001
+[   82.319978][T10335] RBP: ffff88802a2b8000 R08: 0000000000000001 R09: ffffed11
+[   82.322626][T10335] R10: 0000000000000000 R11: 0000000000000001 R12: ffff8888
+[   82.325673][T10335] R13: ffff88801c715d00 R14: 0000000000000000 R15: ffff8884
+[   82.328596][T10335] FS:  0000000000000000(0000) GS:ffff8880eb601000(0000) kn0
+[   82.331502][T10335] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   82.333691][T10335] CR2: 00007ffdc75760e8 CR3: 000000000df84000 CR4: 00000000
+[   82.336816][T10335] Call Trace:
+[   82.337983][T10335]  <TASK>
+[   82.339251][T10335]  drm_gem_object_release_handle+0xc7/0x200
+[   82.341601][T10335]  ? __pfx_drm_gem_object_release_handle+0x10/0x10
+[   82.343873][T10335]  idr_for_each+0x119/0x230
+[   82.345502][T10335]  ? __pfx_idr_for_each+0x10/0x10
+[   82.347109][T10335]  drm_gem_release+0x29/0x40
+[   82.348728][T10335]  drm_file_free.part.0+0x724/0xcf0
+[   82.350729][T10335]  drm_close_helper.isra.0+0x183/0x1f0
+[   82.352605][T10335]  drm_release+0x1ab/0x360
+[   82.354554][T10335]  ? __pfx_drm_release+0x10/0x10
+[   82.356542][T10335]  __fput+0x402/0xb50
+[   82.358121][T10335]  task_work_run+0x16b/0x260
+[   82.359917][T10335]  ? __pfx_task_work_run+0x10/0x10
+[   82.361720][T10335]  ? do_raw_spin_unlock+0x54/0x230
+[   82.363567][T10335]  do_exit+0x85a/0x2b70
+[   82.364995][T10335]  ? find_held_lock+0x2b/0x80
+[   82.366576][T10335]  ? __pfx_do_exit+0x10/0x10
+[   82.367909][T10335]  ? find_held_lock+0x2b/0x80
+[   82.369505][T10335]  do_group_exit+0xd3/0x2a0
+[   82.371127][T10335]  get_signal+0x2286/0x2560
+[   82.372735][T10335]  ? _copy_to_user+0x4b/0xd0
+[   82.374464][T10335]  ? __pfx_get_signal+0x10/0x10
+[   82.376164][T10335]  ? __pfx_do_futex+0x10/0x10
+[   82.377724][T10335]  arch_do_signal_or_restart+0x80/0x780
+[   82.379573][T10335]  ? __pfx_arch_do_signal_or_restart+0x10/0x10
+[   82.381548][T10335]  ? __x64_sys_futex+0x1c5/0x4c0
+[   82.382966][T10335]  ? __x64_sys_futex+0x1ce/0x4c0
+[   82.385107][T10335]  ? __pfx___x64_sys_futex+0x10/0x10
+[   82.387093][T10335]  exit_to_user_mode_loop+0x92/0x130
+[   82.389433][T10335]  do_syscall_64+0x424/0xfa0
+[   82.391083][T10335]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   82.393990][T10335] RIP: 0033:0x7efd9a0defc9
+[   82.395674][T10335] Code: Unable to access opcode bytes at 0x7efd9a0def9f.
+[   82.398168][T10335] RSP: 002b:00007efd99fc4ea8 EFLAGS: 00000246 ORIG_RAX: 00a
+[   82.401952][T10335] RAX: fffffffffffffe00 RBX: 0000000000000000 RCX: 00007ef9
+[   82.405301][T10335] RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000055c8
+[   82.408323][T10335] RBP: 00007efd99fc4ec0 R08: 0000000000000000 R09: 00000000
+[   82.410895][T10335] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe
+[   82.414145][T10335] R13: 00007ffdc7575fef R14: 00007efd99fc4fc0 R15: 00000000
+[   82.418020][T10335]  </TASK>
+[   82.419241][T10335] irq event stamp: 1769
+[   82.420982][T10335] hardirqs last  enabled at (1777): [<ffffffff8199384e>] _0
+[   82.424548][T10335] hardirqs last disabled at (1796): [<ffffffff81993833>] _0
+[   82.427904][T10335] softirqs last  enabled at (1794): [<ffffffff817bddf6>] h0
+[   82.431454][T10335] softirqs last disabled at (1785): [<ffffffff817be289>] _0
+[   82.434335][T10335] ---[ end trace 0000000000000000 ]---
+
